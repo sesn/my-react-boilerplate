@@ -11,6 +11,7 @@ const eslintFormatter = require('react-dev-utils/eslintFormatter');
 const ModuleScopePlugin = require('react-dev-utils/ModuleScopePlugin');
 const getClientEnvironment = require('./env');
 const paths = require('./paths');
+const Critters = require('critters-webpack-plugin');
 
 // Webpack uses `publicPath` to determine where the app is being served from.
 // In development, we always serve from the root. This makes config easier.
@@ -157,11 +158,18 @@ module.exports = {
           // In production, we use a plugin to extract that CSS to a file, but
           // in development "style" loader enables hot editing of CSS.
           {
-            test: /\.css$/,
+            test: /\.(css|scss|sass)$/,
             use: [
               require.resolve('style-loader'),
               {
                 loader: require.resolve('css-loader'),
+                options: {
+                  importLoaders: 1,
+                  sourceMap: true,
+                },
+              },
+              {
+                loader: require.resolve('sass-loader'),
                 options: {
                   importLoaders: 1,
                 },
@@ -211,6 +219,12 @@ module.exports = {
     ],
   },
   plugins: [
+    // new Critters({
+    //   // Outputs: <link rel="preload" onload="this.rel='stylesheet'">
+    //   preload: 'swap',
+    //   // Don't inline critical font-face rules, but preload the font URLs:
+    //   preloadFonts: true
+    // }),
     // Makes some environment variables available in index.html.
     // The public URL is available as %PUBLIC_URL% in index.html, e.g.:
     // <link rel="shortcut icon" href="%PUBLIC_URL%/favicon.ico">
